@@ -1,0 +1,40 @@
+from __future__ import print_function
+import numpy as np
+from keras.datasets import mnist
+from keras.models import Sequential
+from keras.layers.core import Dense, Activation
+from keras.optimizers import SGD
+from keras.utils import np_utils
+np.random.seed(1671)# Для воспроизводимости результатов
+
+# Сеть и Обучение
+NB_EPOCH = 200
+BATCH_SIZE = 128
+VERBOSE = 1
+NB_CLASSES = 10# кол-во результатов = числу цифр
+OPTIMIZER = SGD()
+N_HIDDEN = 128
+VALODATION_SPLIT = 0.2# Какая часть обучающиго набора зарезервирована для контроля
+
+# данные: Случайно перетасованны и разбиты на обучающий и тестовый набор
+
+(X_train, Y_train), (X_test, Y_test) = mnist.load_data()
+# X_train содержит 60000 изображения размера 28х28 пикселей
+# преобразуем в массив 60000х784 Reshaped = 784
+
+Reshaped = 784
+X_train = X_train.reshape(60000, Reshaped)
+X_test = X_test.reshape(10000, Reshaped)
+X_train = X_train.astype('float32')
+X_test = X_test.astype('float32')
+
+# Нормировать
+
+X_train /= 255
+X_test /= 255
+
+print(X_train.shape[0], 'train samples')
+print(X_test.shape[0], 'test samples')
+
+Y_train = np_utils.to_categorical(Y_train, NB_CLASSES)
+Y_test = np_utils.to_categorical(Y_test, NB_CLASSES)
